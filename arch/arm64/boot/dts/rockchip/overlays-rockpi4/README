@@ -1,0 +1,192 @@
+Introduction
+=============
+
+This directory contains Device Tree overlays. Device Tree makes it possible
+to support many hardware configurations with a single kernel and without the
+need to explicitly load or blacklisr kernel modules.
+
+On Rock Pi, you will find a .dtb for each base platform in /boot. This
+describes the hardware that is part of the Rock Pi board. The loader selects
+the .dtb file appropriate for the platform by name and pass it to the kernel.
+
+Device Tree Overlays usage is controlled from /boot/hw_intfc.conf. You can do
+the settings for Rock Pi in your hw_intfc.conf, which should cause your
+Rock Pi to do your wanted things after a reboot.
+
+In /boot/overlays you will find many .dtbo files. The loader will merge the
+selected .dtbo files by reading file /boot/hw_intfc.conf.
+
+
+Using Overlays
+===============
+
+Overlays are loaded using "intfc:" directive. As an example, consider the
+at24c02 module. Add one line in hw_intfc.conf:
+
+	intfc:dtoverlay=at24c02
+
+This causes the file /boot/overlays/at24c02.dtbo to be loaded.
+
+
+The Overlay and Parameter Reference
+=====================================
+
+N.B. When editing this file, please preserve the indentation levels to make it
+simple to parse programmatically. NO HARD TABS.
+
+Name:	pwm0
+Info:	Overlay for BUS PWM0
+Load:	intfc:pwm0=<value>
+Value:
+		on		Set to "on" to enable the pwm0 interface (default "off")
+		off		Set to "off" to disable the pwm0 interface
+
+
+Name:	pwm1
+Info:	Overlay for BUS PWM1
+Load:	intfc:pwm1=<value>
+Value:
+		on		Set to "on" to enable the pwm1 interface (default "off")
+		off		Set to "off" to disable the pwm2 interface
+
+
+Name:	uart2
+Info:	Overlay for BUS UART2
+Load:	intfc:uart2=<value>
+Value:
+		on		Set to "on" to enable the uart2 interface (default "off")
+		off		Set to "off" to disable the uart2 interface
+
+
+Name:	uart4
+Info:	Overlay for BUS UART4
+Load:	intfc:uart4=<value>
+Value:
+		on		Set to "on" to enable the uart4 interface (default "off")
+		off		Set to "off" to disable the uart4 interface
+
+
+Name:	spi1
+Info:	Overlay for BUS SPI1
+Load:	intfc:spi1=<value>
+Value:
+		on		Set to "on" to enable the spi1 interface (default "off")
+		off		Set to "off" to disable the spi1 interface
+
+
+Name:	spi2
+Info:	Overlay for BUS SPI2
+Load:	intfc:spi2=<value>
+Value:
+		on		Set to "on" to enable the spi2 interface (default "off")
+		off		Set to "off" to disable the spi2 interface
+
+
+Name:	i2c2
+Info:	Overlay for BUS I2C2
+Load:	intfc:i2c2=<value>
+Value:
+		on		Set to "on" to enable the i2c2 interface (default "off")
+		off		Set to "off" to disable the i2c2 interface
+
+
+Name:	i2c6
+Info:	Overlay for BUS I2C6
+Load:	intfc:i2c6=<value>
+Value:
+		on		Set to "on" to enable the i2c6 interface (default "off")
+		off		Set to "off" to disable the i2c6 interface
+
+
+Name:	i2c7
+Info:	Overlay for BUS I2C7
+Load:	intfc:i2c7=<value>
+Value:
+		on		Set to "on" to enable the i2c7 interface (default "off")
+		off		Set to "off" to disable the i2c7 interface
+
+
+N.B. It is recommended to only ebable those bus interfaces that are needed.
+Leaving all interfaces enabled can lead to unwanted behaviour.
+
+
+Name:   at24c02
+Info:   Overlay for activation of Atmel AT24C02 over I2C
+Load:   intfc:dtoverlay=at24c02
+
+
+Name:   two-color-led
+Info:   Overlay for activation of two color led module.
+Load:   intfc:dtoverlay=two-color-led
+
+
+Name:   console-on-ttyS2
+Info:   By default, fiq debugger console is disabled.
+        When this dtbo file is loaded, Rock Pi enables fiq debugger console.
+        ttyS2 Pins will output console information.
+        At the same time, it is recommended that you set UART2 to off in
+        file /boot/hw_intfc.conf and do not load console-on-ttyS4.dtbo file.
+Load:   intfc:dtoverlay=console-on-ttyS2
+
+
+Name:   console-on-ttyS4
+Info:   By default, fiq debugger console is disabled.
+        When this dtbo file is loaded, Rock Pi enables fiq debugger console.
+        ttyS4 Pins will output console information.
+        At the same time, it is recommended that you set UART4 to off in
+        file /boot/hw_intfc.conf and do not load console-on-ttyS2.dtbo file.
+Load:   intfc:dtoverlay=console-on-ttyS4
+
+
+Name:   devspi1
+Info:   Overlay for activation of dummy spi device on SPI1 for test.
+        Need set: intfc:spi1=on
+        By default, spi1 is disabled.
+        when use spi1, uart4 must be disabled.
+Load:   intfc:dtoverlay=devspi1
+
+
+Name:	devspi2
+Info:   Overlay for activation of dummy spi device on SPI2 for test.
+        Need set: intfc:spi2=on
+        When use spi2. i2c6 must be disabled.
+Load:   intfc:dtoverlay=devspi2
+
+
+Name:   pcie-gen2
+Info:   Overlay for activation of pcie running on GEN2 mode.
+Load:   intfc:dtoverlay=pcie-gen2
+
+
+Name:   spi1-waveshare35b-v2
+Info:   Overlay for activation of waveshare 3.5inch lcd(B v2).
+        Need set: intfc:uart4=off intfc:spi1=on
+Load:   intfc:dtoverlay=spi1-0waveshare35b-v2
+
+
+Name:   spi1-waveshare35c
+Info:   Overlay for activation of waveshare 3.5inch lcd(C).
+        Need set: intfc:uart4=off intfc:spi1=on
+Load:   intfc:dtoverlay=spi1-waveshare35c
+
+
+Name:   spi1-flash
+Info:   Overlay for activation of spi flash.
+        Need set: intfc:uart4=off intfc:spi1=on
+Load:   intfc:dtoverlay=spi1-flash
+
+
+Name:   w1-gpio4-30
+Info:   Overlay for activation of 1-wire on GPIO4_D6 for devices such as
+        DS18B20.
+Load:   intfc:dtoverlay=w1-gpio4-30
+
+
+Name:   gt9xx
+Info:   Overlay for activation of gt9xx touchpanel.
+Load:   intfc:dtoverlay=gt9xx
+
+
+Name:   spi1-mcp2515-can0
+Info:   Overlay for activation of can function of waveshare ra485 can hat.
+Load:   intfc:dtoverlay=spi1-mcp2515-can0
