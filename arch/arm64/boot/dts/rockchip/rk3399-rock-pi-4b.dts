@@ -46,16 +46,59 @@
 
 / {
 
-	model = "ROCK PI 4B SLASH V01";
+	model = "ROCK PI 4B SLASH version";
 	compatible = "rockchip,rockpi","rockchip,rk3399";
 
 	sample-gpio-led {
-		status = "okay";
+		status = "disabled";
 		compatible = "sample,gpio-led";
-		led0-gpios = <&gpio4 4 GPIO_ACTIVE_HIGH>;
-		led1-gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>;
-		led2-gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>;
-		led3-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&led_0 &led_1 &led_2 &led_3>;
+
+		led0-gpios = <&gpio2 RK_PB3 GPIO_ACTIVE_HIGH>;
+		led1-gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>;
+		led2-gpios = <&gpio4 RK_PC6 GPIO_ACTIVE_HIGH>;
+		led3-gpios = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;
+	};
+
+	irq-gpio-sample {
+		status = "disabled";
+		compatible = "gpiokey,irq-sample";
+		pinctrl-names = "default";
+		pinctrl-0 = <&key_0 &key_1>;
+		key0-gpios = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
+		key1-gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+		interrupt-parent = <&gpio4>;
+		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>, <RK_PD2 GPIO_ACTIVE_HIGH>;
+	};
+
+	sample-simple-key {
+		status = "disabled";
+		compatible = "sample,simple-key";
+		pinctrl-names = "default";
+		pinctrl-0 = <&key_0>;
+		key0-gpios = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		poll-interval = <100>;
+		status = "disabled";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&key_0 &key_1>;
+
+		user_k1 {
+			label = "User Push Button K1";
+			linux,code = <KEY_RED>;
+			gpios = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
+		};
+
+		user_k2 {
+			label = "User Push Button K2";
+			linux,code = <KEY_GREEN>;
+			gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+		};
 	};
 
 };
@@ -66,4 +109,39 @@
 
 &wireless_bluetooth {
 	status = "okay";
+};
+
+&pinctrl {
+	led {
+		led_0: led_0 {
+			rockchip,pins = <2 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+		led_1: led_1 {
+			rockchip,pins = <4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+		led_2: led_2 {
+			rockchip,pins = <4 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+		led_3: led_3 {
+			rockchip,pins = <4 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+
+	btn {
+		key_0: key_0 {
+			rockchip,pins = <4 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+		key_1: key_1 {
+			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+};
+
+&i2c7 {
+	status = "okay";
+	isl29023@44 {
+		status = "okay";
+		compatible = "isil,isl29023";
+		reg = <0x44>;
+	};
 };
