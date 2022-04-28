@@ -4,6 +4,14 @@
 
 menu "Misc devices"
 
+config CONFIG_HELLO_WORLD
+	tristate "Hello World"
+	default n
+	help
+	  say Y here to enable Hello World driver
+
+
+
 config ROCKCHIP_SCR
 	tristate "Rockchip Smartcard Reader Controller support"
 	default n
